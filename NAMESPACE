@@ -2,6 +2,7 @@
 
 export(ac)
 export(bootCI)
+export(boot_se)
 export(colz)
 export(load_lefftpack_data)
 export(lu)

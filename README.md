@@ -14,3 +14,9 @@ devtools::install_github("lefft/lefftpack")
 library("lefftpack")
 ```
 
+contents: 
+
+- `func1(...)`
+- `func2(...)`
+- `func3(...)`
+- ...

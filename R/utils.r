@@ -1,5 +1,11 @@
 ### functions for data analysis (updated jun21/2017)
 
+## TODO list: 
+# 
+#   - write documentation for new foncs at bottom
+#       > quiet_attach()
+#       > boot_se()
+# 
 ## wishlist: 
 # 
 #   - center a variable around zero
@@ -188,4 +194,47 @@ lu <- function(x){
 r2 <- function(x){
   round(x, digits=2)
 }
+
+
+# print summary of the results of a lrt test, from an anova object
+print_lrt_message <- function(anova_object){
+  message(
+    "\n------------------------------------------------------\n",
+    "using likelihood-ratio test assuming null hypothesis:\n   ",
+    "h_0: 'interaction model is no better than the model w/o interaction'\n\n",
+    round(anova_object$Chisq[2], 2), "     <~~ chi-square test stat from LRT",
+    "\n", round(anova_object$`Pr(>Chisq)`[2], 8), "  <~~ p-value under the null",
+    "\n------------------------------------------------------\n"
+  )
+}
+
+# bootstrap mean and standard error of the mean
+#' boot_se
+#'
+#' @param vec 
+#' @param se 
+#' @param b 
+#' @param n 
+#' @param dig 
+#'
+#' @return `out`: booted se or mean of `vec`, depends on supplied `se` param val
+#' @export
+#'
+#' @examples boot_se(1:10)
+boot_se <- function(vec, se=TRUE, b=1000, n=length(vec[!is.na(vec)]), dig=2){
+  # remove missings (build in logic for missings later)
+  vec <- vec[!is.na(vec)]
+  # make a container for results
+  boots <- rep(NA, times=b)
+  # conduct bootstrap resampling
+  for (x in 1:b){
+    boots[x] <- mean(sample(vec, size=n, replace=TRUE))
+  }
+  # return:   bootstrap se    if se=TRUE;
+  #           bootstrap mean  if se=FALSE
+  out <- ifelse(se==TRUE, sd(boots), mean(boots))
+  return(out)
+}
+
+
 
