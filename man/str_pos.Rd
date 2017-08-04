@@ -4,12 +4,14 @@
 \alias{str_pos}
 \title{string position getter}
 \usage{
-str_pos(string, idx)
+str_pos(string, idx = NULL, collapse = TRUE)
 }
 \arguments{
 \item{string}{a character string}
 
 \item{idx}{a position index}
+
+\item{collapse}{whether to smoosh output together}
 }
 \value{
 the `idx`-th character in `string`

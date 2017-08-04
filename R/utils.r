@@ -146,15 +146,40 @@ pvalClassify <- function(x, alpha=.05){
 #'
 #' @param string a character string
 #' @param idx a position index
+#' @param collapse whether to smoosh output together
 #'
 #' @return the `idx`-th character in `string`
 #' @export
 #'
 #' @examples str_pos("boosh", 4)
-str_pos <- function(string, idx){
-  chars <- strsplit(string, "")[[1]]
-  return(chars[idx])
+str_pos <- function(string, idx=NULL, collapse=TRUE){
+  if (length(idx)==0){
+    message(
+      "gotta gimme an index mofo!\n(smh returning NULL bc i'm nice)"
+    )
+    return(NULL)
+    # ow if its just a number, get that char
+  } else {
+    if (length(idx)==1){
+      chars <- strsplit(string, "")[[1]]
+      return(chars[idx])
+      # ow if its a non-trivial vector, split it and optionally collapse
+    } else {
+      # get all the chars as a vec
+      chars <- unlist(strsplit(string, ""))
+      # subset chars by index
+      chars <- chars[idx]
+      # if desire, paste them together and return; ow just return as a vec
+      if (collapse==TRUE){
+        return(paste(chars, collapse=""))
+      } else {
+        return(chars)
+      }
+    }
+  }
 }
+
+
 
 
 #' convert to character quickly
