@@ -1,5 +1,6 @@
-### functions for data analysis (updated jun21/2017)
-
+### functions for data analysis and other misc stuff 
+### (updated jun21/2017)
+# 
 ## TODO list: 
 # 
 #   - write documentation for new foncs at bottom
@@ -101,8 +102,8 @@ zscore <- function(x){
 
 ### simple + commonly used utility functions
 
-# attach packages w/o annoying messages
-#' quiet_attach
+#' attach packages w/o annoying messages (legacy version)
+#'
 #'
 #' @param packages 
 #' @param shhh 
@@ -111,7 +112,8 @@ zscore <- function(x){
 #' @export
 #'
 #' @examples boosh 
-quiet_attach <- function(packages, shhh=TRUE){
+quiet_attach_old <- function(packages, shhh=TRUE){
+  # TODO: get lefftpack to take a list of inputs
   for (x in seq_along(packages)){
     if (shhh==TRUE){
       suppressPackageStartupMessages(
@@ -153,6 +155,8 @@ pvalClassify <- function(x, alpha=.05){
 #'
 #' @examples str_pos("boosh", 4)
 str_pos <- function(string, idx=NULL, collapse=TRUE){
+  # TODO: GENERALIZE TO WORK ON STRING VEXXE
+  #       (note: quick fix w sapply doesnt work as just a wrapper)
   if (length(idx)==0){
     message(
       "gotta gimme an index mofo!\n(smh returning NULL bc i'm nice)"
