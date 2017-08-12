@@ -4,12 +4,12 @@
 ## TODO list: 
 # 
 #   - write documentation for new foncs at bottom
-#       > quiet_attach()
+#       -x- > quiet_attach()
 #       > boot_se()
 # 
 ## wishlist: 
 # 
-#   - center a variable around zero
+#   -x- - center a variable around zero
 #   - bootstrap regression coefficients
 #   - simple permutation test func
 #   - more general perm func
