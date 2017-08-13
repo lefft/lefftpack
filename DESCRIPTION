@@ -2,12 +2,13 @@ Package: lefftpack
 Title: tim's personal package (demo of jun15/2017)
 Version: 0.0.0.9000
 Authors@R: person("timothy", "leffel", email = "tjleffel@gmail.com.com", role = c("aut", "cre"))
-Description: just some functions to make life easier
+Description: a collection of functions to make life easier, some for text processing like `tf_idf()`; others for common numerical tasks like bootstrap ci's for s.e.m.; etc.
 Depends: R (>= 3.4.0)
 License: no license
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    dplyr
 VignetteBuilder: knitr
