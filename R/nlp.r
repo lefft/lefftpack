@@ -5,6 +5,7 @@
 #   - idf()
 #   - tf_idf()
 #   - remove_stops()
+#   - word_count_est()
 # 
 # working on integrating: 
 #   - bigram_plot()
@@ -21,8 +22,28 @@
 #   - only `gram_size`=1 currewntly supported for tf-idf (aug13/2017)
 #   - for doc intersection, need to convert to base-only internals
 
+### word_count_est(doc, unique=FALSE) -----------------------------------------
 
-### remove_stops(doc, stops) -----------------------------------------------
+#' estimate the number of words in a document (total or unique)
+#'
+#' @param doc string or vector of strings or list of strings
+#' @param unique boolean
+#'
+#' @return numeric, word count (total or unique)
+#' @export
+#'
+#' @examples word_count_est(doc="my name is tim and blah blah blah", unique=TRUE)
+word_count_est <- function(doc, unique=FALSE){
+  doc <- paste(doc, collapse=" ")
+  words <- unlist(strsplit(doc, split=" "))
+  if (!unique){
+    return(length(words))
+  } else {
+    return(length(unique(words)))
+  }
+}
+
+### remove_stops(doc, stops) --------------------------------------------------
 
 #' remove a list of words from a document (case- and punctuation-sensitive)
 #' (to deal with punctuation etc., call `scrub_doc()` on the `doc` arg before)
