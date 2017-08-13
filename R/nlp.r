@@ -4,6 +4,7 @@
 #   - tf()
 #   - idf()
 #   - tf_idf()
+#   - remove_stops()
 # 
 # working on integrating: 
 #   - bigram_plot()
@@ -19,6 +20,34 @@
 # notes: 
 #   - only `gram_size`=1 currewntly supported for tf-idf (aug13/2017)
 #   - for doc intersection, need to convert to base-only internals
+
+
+### remove_stops(doc, stops) -----------------------------------------------
+
+#' remove a list of words from a document (case- and punctuation-sensitive)
+#' (to deal with punctuation etc., call `scrub_doc()` on the `doc` arg before)
+#'
+#' @param doc 
+#' @param stops 
+#'
+#' @return the document, with all elements of `stops` removed
+#' @export
+#'
+#' @examples remove_stops(doc="hi i am tim, tim like goat", stops=c("is", "tim"))
+remove_stops <- function(doc, stops){
+  doc_string <- paste(doc, collapse=" ")
+  doc_words <- unlist(strsplit(doc_string, split=" "))
+  # remove empty chars
+  doc_words <- doc_words[!doc_words %in% c("", " ")]
+  # remove the stop words
+  doc_words <- doc_words[!doc_words %in% stops]
+  # put it back together
+  doc_reassembled <- paste(doc_words, collapse=" ")
+  # and return
+  return(doc_reassembled)
+}
+
+
 
 
 ### tf(doc, term, gram_size=1) ------------------------------------------------
