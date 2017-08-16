@@ -104,7 +104,7 @@ zscore <- function(x){
 
 
 # annotate pvals w stars
-#' pvalClassify
+#' pval_classify
 #'
 #' @param x 
 #' @param alpha 
@@ -113,10 +113,10 @@ zscore <- function(x){
 #' @export
 #'
 #' @examples boosh 
-pvalClassify <- function(x, alpha=.05){
-  ifelse(x < (alpha/50), " (***)", 
-         ifelse(x < (alpha/5), " (**)", 
-                ifelse(x < alpha, " (*)", 
+pval_classify <- function(x, alpha=.05){
+  ifelse(x < (alpha/50), " ***", 
+         ifelse(x < (alpha/5), " **", 
+                ifelse(x < alpha, " *", 
                        ifelse(x < (alpha*2), " +", " n.s."))))
 }
 
