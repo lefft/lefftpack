@@ -74,6 +74,8 @@ remove_stops <- function(doc, stops){
 ### tf(doc, term, gram_size=1) ------------------------------------------------
 
 #' term frequency: get the frequency of term in doc (for gram_size chunks)
+#' NOTE: only `gram_size=1` is implemented right now (i.e. words)
+#' NOTE: want to add option of stemming directly from a call to `tf()` 
 #'
 #' @param doc 
 #' @param term 

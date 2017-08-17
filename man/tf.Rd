@@ -2,7 +2,9 @@
 % Please edit documentation in R/nlp.r
 \name{tf}
 \alias{tf}
-\title{term frequency: get the frequency of term in doc (for gram_size chunks)}
+\title{term frequency: get the frequency of term in doc (for gram_size chunks)
+NOTE: only `gram_size=1` is implemented right now (i.e. words)
+NOTE: want to add option of stemming directly from a call to `tf()`}
 \usage{
 tf(doc, term, lower = TRUE, toss_punct = TRUE, toss_num = TRUE,
   gram_size = 1)
@@ -25,6 +27,8 @@ numeric, frequency of term in document
 }
 \description{
 term frequency: get the frequency of term in doc (for gram_size chunks)
+NOTE: only `gram_size=1` is implemented right now (i.e. words)
+NOTE: want to add option of stemming directly from a call to `tf()`
 }
 \examples{
 tf(doc="blah blah im tim my name is tim", term="tim")
