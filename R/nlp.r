@@ -302,6 +302,58 @@ text2bigram <- function(doc,           # doc is the only obligatory argument
 }
 
 
+
+
+
+#' get one of (currently) five different lists of stopwords
+#'
+#' @param stop_list can be: 'una', 'bible', 'snowball', 'onix', or 'SMART'
+#'
+#' @return a vector of common English function words to remove from text before computing on it 
+#' @export
+#'
+#' @examples get_stop_list(stop_list="una")
+get_stop_list <- function(stop_list=c("una","bible",
+                               "snowball","onix","SMART")){
+  if (length(stop_list) != 1){
+    message(paste0(
+      "gotta pick a list of stopwords!\n  ",
+      "u can has: 'una', 'bible', 'snowball', 'onix', or 'SMART'"))
+    return(NULL)
+  }
+  if (stop_list=="bible"){
+    # a list im making up for bible
+    bible_stops <- c(
+      "the","and","of","to","that","shall","unto","for","his","a","they",
+      "be","is","him","them","it","with","all","thou","thy","was","which",
+      "my","me","but","ye","their","have","thee","from","as","are","when",
+      "this","out","were","by","you","up","there","hath","then","had","into",
+      "on","also","an","at","or","said","saith","about","with","i",
+      "we","us","did","our","these","those","if",
+      "will","went","in" # <-- dk about deez
+    )
+    return(bible_stops)
+  }
+  if (stop_list=="una"){
+    # a list i made up based on top words in `una` (looked ahead)
+    # (get uniques in case i make dupes on accident when adding...)
+    una_stops <- unique(c(
+      "the","of","to","a","and","that","be","it","or","as","which","in","he",
+      "there","we","been","who","do","does","this","they","is","are","at",
+      "have","if","for","an","so","by","their","with","on","when","than",
+      "about","but","you","would","one","its","has","may","i",
+      # these mite be interesting tho...
+      "from","can","how","much","no","these","into","many"
+    ))
+    return(una_stops)
+  } else {
+    # get the tt stop sets
+    tt_stops <- tidytext::stop_words
+    return(tt_stops$word[tt_stops$lexicon==stop_list])
+  }
+}
+
+
 ### doc_intersection(doc1, doc2, ----------------------------------------------
 ###                  doc1_name="doc1", doc2_name="doc2", stoplist="")
 # *** this one needs to be base-ified before can be included...
