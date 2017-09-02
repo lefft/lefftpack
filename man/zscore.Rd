@@ -13,7 +13,7 @@ zscore(x)
 val
 }
 \description{
-quick zscore func
+equivalent to a wrapper around `scale()` w defaults, but returns atomic vec
 }
 \examples{
 boosh 

@@ -15,7 +15,7 @@ pval_classify(x, alpha = 0.05)
 val
 }
 \description{
-pval_classify
+annotate vector of p-values w stars, indicating common signif levels
 }
 \examples{
 boosh 

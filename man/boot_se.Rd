@@ -2,7 +2,8 @@
 % Please edit documentation in R/utils.r
 \name{boot_se}
 \alias{boot_se}
-\title{boot_se}
+\title{boot_se
+bootstrap mean and standard error of the mean}
 \usage{
 boot_se(vec, se = TRUE, b = 1000, n = length(vec[!is.na(vec)]), dig = 2)
 }
@@ -22,6 +23,7 @@ boot_se(vec, se = TRUE, b = 1000, n = length(vec[!is.na(vec)]), dig = 2)
 }
 \description{
 boot_se
+bootstrap mean and standard error of the mean
 }
 \examples{
 boot_se(1:10)

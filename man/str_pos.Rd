@@ -17,7 +17,7 @@ str_pos(string, idx = NULL, collapse = TRUE)
 the `idx`-th character in `string`
 }
 \description{
-string position getter
+get the `idx`-th character in `string`
 }
 \examples{
 str_pos("boosh", 4)

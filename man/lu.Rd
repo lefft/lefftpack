@@ -13,7 +13,7 @@ lu(x)
 number of unique vals, as an integer
 }
 \description{
-number of unique vals
+(just a wrapper around `length(unique())`, for quick interactive use)
 }
 \examples{
 lu(c(1,2,3,1,2,4))

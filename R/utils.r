@@ -5,7 +5,7 @@
 # 
 #   - write documentation for new foncs at bottom
 #       -x- > quiet_attach()
-#       > boot_se()
+#       > boot_se() (should rewrite it actually)
 # 
 ## wishlist: 
 # 
@@ -32,6 +32,7 @@
 #'
 #' @examples boosh 
 bootCI <- function(vec, b=1000, n=length(vec[!is.na(vec)]), dig=6, narm=TRUE){
+  message("this func is still in development! (works fine but ugly interface)")
   # can remove missings (build in logic for missings later)
   vec <- vec[!is.na(vec)]
   # make a container for results
@@ -85,8 +86,9 @@ colz <- function(){
 }
 
 
-# (equiv to a wrapper around `scale()` w defaults, but returns atomic vec)
 #' quick zscore func 
+#'
+#' equivalent to a wrapper around `scale()` w defaults, but returns atomic vec
 #'
 #' @param x 
 #'
@@ -100,12 +102,11 @@ zscore <- function(x){
 
 
 
-### simple + commonly used utility functions
 
-
-# annotate pvals w stars
-#' pval_classify
-#'
+#' pval_classify 
+#' 
+#' annotate vector of p-values w stars, indicating common signif levels
+#' 
 #' @param x 
 #' @param alpha 
 #'
@@ -121,7 +122,9 @@ pval_classify <- function(x, alpha=.05){
 }
 
 
-#' string position getter
+#' string position getter 
+#' 
+#' get the `idx`-th character in `string`
 #'
 #' @param string a character string
 #' @param idx a position index
@@ -161,10 +164,82 @@ str_pos <- function(string, idx=NULL, collapse=TRUE){
 }
 
 
+#' initial segment of string(s) 
+#'
+#' get the initial segment of length `nchar` for each element of `string_vec`
+#' 
+#' @param string_vec a vector of character strings 
+#' @param nchar number of characters to return
+#' @param keep_names for handling named vectors, `FALSE` by default
+#'
+#' @return initial segment of each string in the input vector
+#' @export
+#'
+#' @examples init_seg(string_vec=c("hai,","my","name","is","timi!"), nchar=3)
+init_seg <- function(string_vec, nchar, keep_names=FALSE){
+  out <- sapply(seq_along(string_vec), function(idx){
+    if (is.na(string_vec[idx])){
+      return(NA)
+    } else {
+      if (nchar(string_vec[idx]) < nchar){
+        return(string_vec[idx])
+      } else {
+        return(paste(
+          unlist(strsplit(string_vec[idx], ""))[seq_len(nchar)], 
+          collapse=""
+        ))
+      }
+    }
+  })
+  if (keep_names){
+    return(out)
+  } else {
+    return(unname(out))
+  }
+}
+
+
+
+#' final segment of string(s) 
+#'
+#' get the final segment of length `nchar` for each element of `string_vec`
+#' 
+#' @param string_vec a vector of character strings 
+#' @param nchar number of characters to return
+#' @param keep_names for handling named vectors, `FALSE` by default
+#'
+#' @return final segment of each string in the input vector
+#' @export
+#'
+#' @examples final_seg(string_vec=c("hai,","my","name","is","timi!"), nchar=3)
+final_seg <- function(string_vec, nchar, keep_names=FALSE){
+  out <- sapply(seq_along(string_vec), function(idx){
+    if (is.na(string_vec[idx])){
+      return(NA)
+    } else {
+      if (nchar(string_vec[idx]) < nchar){
+        return(string_vec[idx])
+      } else {
+        return(
+          paste(unlist(strsplit(string_vec[idx], ""))[
+            (nchar(string_vec[idx])-nchar+1):nchar(string_vec[idx])
+            ], collapse="")
+        )
+      }
+    }
+  })
+  if (keep_names){
+    return(out)
+  } else {
+    return(unname(out))
+  }
+}
+
 
 
 #' convert to character quickly
 #'
+#' (just a wrapper around `as.character()`, for quick interactive use)
 #' @param x an atomic vector
 #'
 #' @return `x` as a character string
@@ -178,6 +253,8 @@ ac <- function(x){
 
 #' number of unique vals
 #'
+#' (just a wrapper around `length(unique())`, for quick interactive use)
+#' 
 #' @param x an atomic vector
 #'
 #' @return number of unique vals, as an integer
@@ -191,6 +268,8 @@ lu <- function(x){
 
 #' round to two digits
 #'
+#' (just a wrapper for quick interactive use) 
+#' 
 #' @param x a numeric vector
 #'
 #' @return `x`, rounded to two digits
@@ -202,20 +281,54 @@ r2 <- function(x){
 }
 
 
-# print summary of the results of a lrt test, from an anova object
-print_lrt_message <- function(anova_object){
+#' abbreviated summary of nested model comparison via LRT
+#'
+#' print just the test stat and p-value for a likelihood ratio test 
+#' assessing relative fit between two nested models (computed w `anova()`)
+#' 
+#' @param mob_full a model object with k predictors
+#' @param mob_red a model object with j predictors where j < k 
+#' @param anova_object a comparison of nested models via `anova()`
+#'
+#' @return mostly for message side-effect, but returns 
+#' the test stat and p-val in a named vector
+#' @export 
+#'
+#' @examples 
+#' fit <- lm(mpg ~ wt + cyl, data=mtcars)
+#' fit_red <- lm(mpg ~ cyl, data=mtcars)
+#' 
+#' print_lrt_message(mob_full=fit, mob_red=fit_red)
+#' 
+#' comparison <- anova(fit, fit_red)
+#' print_lrt_message(anova_object=comparison)
+print_lrt_message <- function(mob_full=NULL, mob_red=NULL, anova_object=NULL){
+  # throw error if it's not the case that exactly one of the following is true: 
+  #   - is.null(anova_object)
+  #   - sum(is.null(mob_full), is.null(mob_red)) == 2
+  stopifnot(xor(is.null(anova_object)), 
+            sum(is.null(mob_full), is.null(mob_red)) == 2)
+  
+  if (is.null(anova_object)){
+    message("computing LRT via `anova()` for `mob_full` against `mob_red`\n")
+    anova_object <- anova(mob_full, mob_red)
+  } 
+  
   message(
     "\n------------------------------------------------------\n",
     "using likelihood-ratio test assuming null hypothesis:\n   ",
-    "h_0: 'interaction model is no better than the model w/o interaction'\n\n",
-    round(anova_object$Chisq[2], 2), "     <~~ chi-square test stat from LRT",
-    "\n", round(anova_object$`Pr(>Chisq)`[2], 8), "  <~~ p-value under the null",
+    "h_0: 'full model is no better than reduced model'\n\n",
+    anova_object$Chisq[2], "    <~~ chi-square test stat from LRT",
+    "\n", anova_object$`Pr(>Chisq)`[2], " <~~ p-value under the null",
     "\n------------------------------------------------------\n"
   )
+  return(c(test_stat = anova_object$Chisq[2], 
+           p_val = anova_object$`Pr(>Chisq)`[2]))
 }
 
-# bootstrap mean and standard error of the mean
+
 #' boot_se
+#' bootstrap mean and standard error of the mean
 #'
 #' @param vec 
 #' @param se 
@@ -228,6 +341,7 @@ print_lrt_message <- function(anova_object){
 #'
 #' @examples boot_se(1:10)
 boot_se <- function(vec, se=TRUE, b=1000, n=length(vec[!is.na(vec)]), dig=2){
+  message("this func is still in development! (works fine but not v flexible)")
   # remove missings (build in logic for missings later)
   vec <- vec[!is.na(vec)]
   # make a container for results
