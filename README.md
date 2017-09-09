@@ -19,17 +19,17 @@ To install the package:
 devtools::install_github("lefft/lefftpack")
 ```
 
-To attach the package (i.e. make all functions directly available in a session):
+To load and attach the package (i.e. make all functions directly available in a session):
 ```r
 library("lefftpack")
 ```
 
-Or after install, you can use just a single function with `lefftpack::`, as in: 
+Or you can use `lefftpack::` to call just a single function without attaching the whole package, as in: 
 ```r
-# e.g. to attach a handful of common packages and set a nice plot theme
+# e.g. to load and attach a handful of common packages + set a nice plot theme
 lefftpack::lazy_setup()
 
-# e.g. to quickly and quietly attach many packages:
+# e.g. to quickly and quietly load and attach many packages:
 lefftpack::quiet_attach("quanteda","tm","lme4","lmerTest", shhh="failonly")
 ```	
 
