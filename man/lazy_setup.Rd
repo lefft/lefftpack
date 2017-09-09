@@ -5,7 +5,8 @@
 \title{load my most common set of packages and set plot defaults}
 \usage{
 lazy_setup(packages = NULL, quiet = TRUE, show_message = TRUE,
-  set_plot_theme = TRUE, font_size = 14, sparse_grid = FALSE)
+  tim = TRUE, set_plot_theme = TRUE, font_size = 14,
+  sparse_grid = FALSE)
 }
 \arguments{
 \item{packages}{vector of package names, 'defaults' to the five i use most}
@@ -13,6 +14,8 @@ lazy_setup(packages = NULL, quiet = TRUE, show_message = TRUE,
 \item{quiet}{logical, to suppress package startup messages}
 
 \item{show_message}{logical, for one-line console msg w recap of what happened}
+
+\item{tim}{logical, `TRUE` (the default) if you want to attach `lefftpack::` when calling. **NOTE:** if someone besides me starts using this, i would be happy to change the default to `FALSE` or just remove the argument altogether. just drop me a line.}
 
 \item{set_plot_theme}{logical, if `TRUE` sets to the theme i like}
 

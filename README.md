@@ -1,10 +1,10 @@
 
 # `lefftpack::`
-<hr>
+<!-- <hr> -->
 
-A handful of R utility functions that make my life easier. 
+A couple handfuls of utility functions for R that make my life easier. 
 
-Some are probably useful for any R user (esp. `lazy_setup()` and `quiet_attach()`); others are idiosyncratic to the kind of work I do.
+Some are likely to be useful for any R user (esp. `lazy_setup()` and `quiet_attach()`). Others are more specific to the kind of work I do. Eventually there'll be a short vignette illustrating some of the more useful functions. 
 
 Also contains a few language-related datasets for experimenting with language/text analysis techniques.
 
@@ -35,6 +35,7 @@ lefftpack::lazy_setup()
 lefftpack::quiet_attach("quanteda","tm","lme4","lmerTest", shhh="failonly")
 ```	
 
+**nb.** use `lefftpack::lazy_setup(tim=FALSE)` to exclude `lefftpack::` from the default set of packages to attach. 
 
 ### bundled data
 <!-- <hr> -->
@@ -48,7 +49,7 @@ Here's some basic info about them (see documentation for more detail):
 - **`lefftpack::text_googmem`**: <br> a single string (length-1 character vector) containing full text of james damore's infamous "google memo" from 2017
 
 
-**NB.** The raw text datasets both have a fairly formal style, and are actually interestingly similar to one another linguistically (more than you might guess, and in certain specific ways, at least). This is the *only* reason they're included. 
+**nb.** The raw text datasets both have a fairly formal style, and are actually interestingly similar to one another linguistically (more than you might guess, and in certain specific ways, at least). This is the *only* reason they're included. 
 
 
 ### misc. notes

@@ -7,6 +7,7 @@
 #' @param packages vector of package names, 'defaults' to the five i use most
 #' @param quiet logical, to suppress package startup messages 
 #' @param show_message logical, for one-line console msg w recap of what happened
+#' @param tim logical, `TRUE` (the default) if you want to attach `lefftpack::` when calling. **NOTE:** if someone besides me starts using this, i would be happy to change the default to `FALSE` or just remove the argument altogether. just drop me a line. 
 #' @param set_plot_theme logical, if `TRUE` sets to the theme i like
 #' @param font_size base size for plot theme
 #' @param sparse_grid logical, if `TRUE` then removes minor grid lines in theme
@@ -15,10 +16,13 @@
 #' @export 
 #'
 #' @examples lefftpack::lazy_setup()
-lazy_setup <- function(packages=NULL, quiet=TRUE, show_message=TRUE, 
+lazy_setup <- function(packages=NULL, quiet=TRUE, show_message=TRUE, tim=TRUE, 
                        set_plot_theme=TRUE, font_size=14, sparse_grid=FALSE){
   if (is.null(packages)){
     packages <- c("dplyr","magrittr","ggplot2","reshape2","lefftpack")
+    if (!tim){
+      packages <- packages[packages != "lefftpack"]
+    }
   }
   
   session_packs_pre <- names(sessionInfo()[["otherPkgs"]])
