@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{bootCI}
 \alias{bootCI}
-\title{calculate 95% confidence intervals via non-parametric bootstrap}
+\title{calculate 95\% confidence intervals via non-parametric bootstrap}
 \usage{
 bootCI(vec, b = 1000, n = length(vec[!is.na(vec)]), dig = 6,
   narm = TRUE)

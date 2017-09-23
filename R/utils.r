@@ -46,7 +46,7 @@ compare_speed <- function(expr1, expr2){
 } 
 
 
-#' calculate 95% confidence intervals via non-parametric bootstrap 
+#' calculate 95\% confidence intervals via non-parametric bootstrap 
 #' 
 #' returns bootstrap mean and other summary stats
 #'
