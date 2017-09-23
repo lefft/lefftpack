@@ -59,7 +59,7 @@ compare_speed <- function(expr1, expr2){
 #' @return val 
 #' @export
 #'
-#' @examples boosh 
+#' @examples bootCI(rnorm(100), b=100) 
 bootCI <- function(vec, b=1000, n=length(vec[!is.na(vec)]), dig=6, narm=TRUE){
   message("this func is still in development! (works fine but ugly interface)")
   # can remove missings (build in logic for missings later)
@@ -87,6 +87,7 @@ bootCI <- function(vec, b=1000, n=length(vec[!is.na(vec)]), dig=6, narm=TRUE){
     "bootHi"=bootHi
   ), digits=dig))
 }
+
 
 # standard error of a sample proportion
 #' se of a proportion

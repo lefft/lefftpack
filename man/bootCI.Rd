@@ -25,5 +25,5 @@ val
 returns bootstrap mean and other summary stats
 }
 \examples{
-boosh 
+bootCI(rnorm(100), b=100) 
 }
