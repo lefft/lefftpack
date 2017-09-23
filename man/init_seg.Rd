@@ -20,5 +20,5 @@ initial segment of each string in the input vector
 get the initial segment of length `nchar` for each element of `string_vec`
 }
 \examples{
-init_seg(string_vec=c("hai,","my","name","is","timi!"), nchar=3)
+init_seg(string_vec=c("hai,","my","name","is","timi!"), nchar=3) 
 }

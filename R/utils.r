@@ -18,8 +18,37 @@
 #   - ...
 
 
-# calculate 95% confidence intervals via non-parametric bootstrap 
-#' bootstrap mean and other summary stats
+#' compare the speed of two expressions 
+#' 
+#' NOTE: args must be passed as strings! (for now...)
+#'
+#' @param expr1 a quoted piece of code 
+#' @param expr2 another quoted piece of code 
+#'
+#' @return length-two vector with names equal to `expr1` and `expr2`, and values equal to the elapsed time after execution of each 
+#' @export
+#'
+#' @examples 
+#' compare_speed(expr1="length(1:(10^8))", expr2="length(1:(10^7))")
+#' boosh <- rep(c("bah", "bahbah", "boosh!"), times=1e5)
+#' compare_speed(expr1="sum(grepl('ba', boosh))", 
+#'               expr2="sum(grepl('oo', boosh))") 
+compare_speed <- function(expr1, expr2){ 
+  if (!all(is.character(expr1), is.character(expr2))){
+    message("you gotta pass args as character")
+    return(NULL)
+  } 
+  # message("assuming inputs are quoted code\n   ~~> will improve later")
+  out_names <- c(as.character(expr1), as.character(expr2))
+  out <- c(system.time(eval(parse(text=expr1)))["elapsed"], 
+           system.time(eval(parse(text=expr2)))["elapsed"])
+  return(setNames(object=out, nm=out_names))
+} 
+
+
+#' calculate 95% confidence intervals via non-parametric bootstrap 
+#' 
+#' returns bootstrap mean and other summary stats
 #'
 #' @param vec 
 #' @param b 
@@ -175,7 +204,7 @@ str_pos <- function(string, idx=NULL, collapse=TRUE){
 #' @return initial segment of each string in the input vector
 #' @export
 #'
-#' @examples init_seg(string_vec=c("hai,","my","name","is","timi!"), nchar=3)
+#' @examples init_seg(string_vec=c("hai,","my","name","is","timi!"), nchar=3) 
 init_seg <- function(string_vec, nchar, keep_names=FALSE){
   out <- sapply(seq_along(string_vec), function(idx){
     if (is.na(string_vec[idx])){

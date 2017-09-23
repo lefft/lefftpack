@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{bootCI}
 \alias{bootCI}
-\title{bootstrap mean and other summary stats}
+\title{calculate 95% confidence intervals via non-parametric bootstrap}
 \usage{
 bootCI(vec, b = 1000, n = length(vec[!is.na(vec)]), dig = 6,
   narm = TRUE)
@@ -22,7 +22,7 @@ bootCI(vec, b = 1000, n = length(vec[!is.na(vec)]), dig = 6,
 val
 }
 \description{
-bootstrap mean and other summary stats
+returns bootstrap mean and other summary stats
 }
 \examples{
 boosh 
