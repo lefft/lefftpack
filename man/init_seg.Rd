@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{init_seg}
 \alias{init_seg}
-\title{initial segment of string(s)}
+\title{initial segment of string(s) (similar to `base::substr()` but more intuitive)}
 \usage{
 init_seg(string_vec, nchar, keep_names = FALSE)
 }

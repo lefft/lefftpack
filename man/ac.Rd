@@ -13,7 +13,7 @@ ac(x)
 `x` as a character string
 }
 \description{
-(just a wrapper around `as.character()`, for quick interactive use)
+(just a wrapper around `as.character()`, for quick interactive + ad hoc use)
 }
 \examples{
 ac(12345)

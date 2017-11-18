@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{str_pos}
 \alias{str_pos}
-\title{string position getter}
+\title{string position getter (like `base::substr()` but nicer interface + `collapse` option)}
 \usage{
 str_pos(string, idx = NULL, collapse = TRUE)
 }

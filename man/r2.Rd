@@ -13,7 +13,7 @@ r2(x)
 `x`, rounded to two digits
 }
 \description{
-(just a wrapper for quick interactive use)
+(just a wrapper for quick interactive + ad hoc use)
 }
 \examples{
 r2(c(1.234, 2.34558))

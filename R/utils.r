@@ -46,48 +46,6 @@ compare_speed <- function(expr1, expr2){
 } 
 
 
-#' calculate 95\% confidence intervals via non-parametric bootstrap 
-#' 
-#' returns bootstrap mean and other summary stats
-#'
-#' @param vec 
-#' @param b 
-#' @param n 
-#' @param dig 
-#' @param narm 
-#'
-#' @return val 
-#' @export
-#'
-#' @examples bootCI(rnorm(100), b=100) 
-bootCI <- function(vec, b=1000, n=length(vec[!is.na(vec)]), dig=6, narm=TRUE){
-  message("this func is still in development! (works fine but ugly interface)")
-  # can remove missings (build in logic for missings later)
-  vec <- vec[!is.na(vec)]
-  # make a container for results
-  boots <- rep(NA, times=b) 
-  # conduct bootstrap resampling
-  for (x in 1:b){
-    boots[x] <- mean(sample(vec, size=n, replace=TRUE), na.rm=narm)
-  }
-  # boot mean is mean of the boots
-  bootMean <- mean(boots, na.rm=narm)
-  # boot std error is sd of the boot means
-  bootSE <- sd(boots, na.rm=narm)
-  # boot ci's are +/-2 boot se's
-  bootLo <- mean(vec, na.rm=narm) - 1.96*bootSE
-  bootHi <- mean(vec, na.rm=narm) + 1.96*bootSE
-  # collect results + return them
-  return(round(c(
-    "bootMean"=bootMean,
-    "sampMean"=mean(vec),
-    "bootSE"=bootSE,
-    "sampSD"=sd(vec),
-    "bootLo"=bootLo,
-    "bootHi"=bootHi
-  ), digits=dig))
-}
-
 
 # standard error of a sample proportion
 #' se of a proportion
@@ -100,17 +58,17 @@ bootCI <- function(vec, b=1000, n=length(vec[!is.na(vec)]), dig=6, narm=TRUE){
 #'
 #' @examples boosh 
 se_prop <- function(p, n){
-  round(sqrt((p*(1-p))/n), digits=2)
+  round(sqrt((p*(1-p))/n))
 }
 
 # reasonable color palette for plotting
-#' colorze
+#' colorz
 #'
 #' @return val 
 #' @export
 #'
 #' @examples boosh 
-colz <- function(){
+colorz <- function(){
   c(lite_tan="#dbd4d0", claudy_braun="#afa69e", afghan_tan="#c8ab94",
     baygish="#68442a", bilbao="#248100", japlore="#2F742C")
 }
@@ -152,7 +110,7 @@ pval_classify <- function(x, alpha=.05){
 }
 
 
-#' string position getter 
+#' string position getter (like `base::substr()` but nicer interface + `collapse` option)
 #' 
 #' get the `idx`-th character in `string`
 #'
@@ -169,7 +127,7 @@ str_pos <- function(string, idx=NULL, collapse=TRUE){
   #       (note: quick fix w sapply doesnt work as just a wrapper)
   if (length(idx)==0){
     message(
-      "gotta gimme an index mofo!\n(smh returning NULL bc i'm nice)"
+      "yao, gotta gimme a index! (returning NULL)"
     )
     return(NULL)
     # ow if its just a number, get that char
@@ -194,7 +152,7 @@ str_pos <- function(string, idx=NULL, collapse=TRUE){
 }
 
 
-#' initial segment of string(s) 
+#' initial segment of string(s) (similar to `base::substr()` but more intuitive)
 #'
 #' get the initial segment of length `nchar` for each element of `string_vec`
 #' 
@@ -230,7 +188,7 @@ init_seg <- function(string_vec, nchar, keep_names=FALSE){
 
 
 
-#' final segment of string(s) 
+#' final segment of string(s) (similar to `base::substr()` but more intuitive)
 #'
 #' get the final segment of length `nchar` for each element of `string_vec`
 #' 
@@ -269,7 +227,7 @@ final_seg <- function(string_vec, nchar, keep_names=FALSE){
 
 #' convert to character quickly
 #'
-#' (just a wrapper around `as.character()`, for quick interactive use)
+#' (just a wrapper around `as.character()`, for quick interactive + ad hoc use)
 #' @param x an atomic vector
 #'
 #' @return `x` as a character string
@@ -283,7 +241,7 @@ ac <- function(x){
 
 #' number of unique vals
 #'
-#' (just a wrapper around `length(unique())`, for quick interactive use)
+#' (just a wrapper around `length(unique())`, for quick interactive + ad hoc use)
 #' 
 #' @param x an atomic vector
 #'
@@ -298,7 +256,7 @@ lu <- function(x){
 
 #' round to two digits
 #'
-#' (just a wrapper for quick interactive use) 
+#' (just a wrapper for quick interactive + ad hoc use) 
 #' 
 #' @param x a numeric vector
 #'
@@ -333,7 +291,7 @@ r2 <- function(x){
 #' comparison <- anova(fit, fit_red)
 #' print_lrt_message(anova_object=comparison)
 print_lrt_message <- function(mob_full=NULL, mob_red=NULL, anova_object=NULL){
-  # throw error if it's not the case that exactly one of the following is true: 
+  # throw error if it's not the case that exactly one of the following is true:
   #   - is.null(anova_object)
   #   - sum(is.null(mob_full), is.null(mob_red)) == 2
   stopifnot(xor(is.null(anova_object)), 
@@ -357,34 +315,27 @@ print_lrt_message <- function(mob_full=NULL, mob_red=NULL, anova_object=NULL){
 }
 
 
-#' boot_se
-#' bootstrap mean and standard error of the mean
+#' boot_sem
+#' non-parametric bootstrap for standard error of the mean (or just boot mean)
 #'
 #' @param vec 
-#' @param se 
-#' @param b 
-#' @param n 
-#' @param dig 
+#' @param se logical, if `TRUE` (default), returns standard error of the mean; if `FALSE`, returns the mean of the bootstrap means 
+#' @param b number of bootstrap resamples to draw 
+#' @param n number of elements to draw during resampling (defaults to number of non-missing elements in input vector) -- setting `n=1` is jacknife resampling 
 #'
 #' @return `out`: booted se or mean of `vec`, depends on supplied `se` param val
 #' @export
 #'
-#' @examples boot_se(1:10)
-boot_se <- function(vec, se=TRUE, b=1000, n=length(vec[!is.na(vec)]), dig=2){
-  message("this func is still in development! (works fine but not v flexible)")
-  # remove missings (build in logic for missings later)
-  vec <- vec[!is.na(vec)]
-  # make a container for results
-  boots <- rep(NA, times=b)
-  # conduct bootstrap resampling
-  for (x in 1:b){
-    boots[x] <- mean(sample(vec, size=n, replace=TRUE))
-  }
-  # return:   bootstrap se    if se=TRUE;
-  #           bootstrap mean  if se=FALSE
-  out <- ifelse(se==TRUE, sd(boots), mean(boots))
-  return(out)
+#' @examples boot_se(rnorm(1000))
+boot_sem <- function(vec, sem=TRUE, b=1000, 
+                     n=sum(!is.na(vec)), na.rm=TRUE){
+  # remove missings if desired 
+  if (na.rm){ vec <- vec[!is.na(vec)] }
+  
+  # get the means of `b` bootstrap resamples of `vec`
+  boot_means <- replicate(b, mean(sample(vec, size=n, replace=TRUE)))
+  
+  # return boot SEM (sd of boot means) if sem==TRUE; else return mean of means
+  return(ifelse(sem==TRUE, sd(boot_means), mean(boot_means)))
 }
-
-
 

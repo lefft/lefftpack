@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{final_seg}
 \alias{final_seg}
-\title{final segment of string(s)}
+\title{final segment of string(s) (similar to `base::substr()` but more intuitive)}
 \usage{
 final_seg(string_vec, nchar, keep_names = FALSE)
 }
