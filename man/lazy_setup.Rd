@@ -6,7 +6,7 @@
 \usage{
 lazy_setup(packages = NULL, quiet = TRUE, show_message = TRUE,
   tim = TRUE, set_plot_theme = TRUE, font_size = 14,
-  sparse_grid = FALSE)
+  sparse_grid = FALSE, stringsAsFactors = FALSE)
 }
 \arguments{
 \item{packages}{vector of package names, 'defaults' to the five i use most}
@@ -22,6 +22,8 @@ lazy_setup(packages = NULL, quiet = TRUE, show_message = TRUE,
 \item{font_size}{base size for plot theme}
 
 \item{sparse_grid}{logical, if `TRUE` then removes minor grid lines in theme}
+
+\item{stringsAsFactors}{logical, if `FALSE` (default), then session option for `stringsAsFactors` set to `FALSE`}
 }
 \value{
 nothing, used only for side-effects of attaching packages and setting plot theme

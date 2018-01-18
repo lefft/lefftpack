@@ -11,13 +11,18 @@
 #' @param set_plot_theme logical, if `TRUE` sets to the theme i like
 #' @param font_size base size for plot theme
 #' @param sparse_grid logical, if `TRUE` then removes minor grid lines in theme
+#' @param stringsAsFactors logical, if `FALSE` (default), then session option for `stringsAsFactors` set to `FALSE`
 #'
 #' @return nothing, used only for side-effects of attaching packages and setting plot theme
 #' @export 
 #'
 #' @examples lefftpack::lazy_setup()
 lazy_setup <- function(packages=NULL, quiet=TRUE, show_message=TRUE, tim=TRUE, 
-                       set_plot_theme=TRUE, font_size=14, sparse_grid=FALSE){
+                       set_plot_theme=TRUE, font_size=14, sparse_grid=FALSE, 
+                       stringsAsFactors=FALSE){
+  if (!stringsAsFactors){
+    options(stringsAsFactors=FALSE)
+  }
   if (is.null(packages)){
     packages <- c("dplyr","magrittr","ggplot2","reshape2","lefftpack")
     if (!tim){
