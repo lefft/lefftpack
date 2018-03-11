@@ -1,49 +1,69 @@
 ### functions for data analysis and other misc stuff 
 ### (updated jun21/2017)
 # 
-## TODO list: 
-# 
-#   - write documentation for new foncs at bottom
-#       -x- > quiet_attach()
-#       > boot_se() (should rewrite it actually)
-# 
 ## wishlist: 
 # 
 #   -x- - center a variable around zero
 #   - bootstrap regression coefficients
 #   - simple permutation test func
 #   - more general perm func
-#   - ggplot2 theme(s?)
-#   - want to represent `colz()` as data not fonc
-#   - ...
+#   - need to represent `colz()` as data not fonc
+#   - import a single func/obj from a *package* (import does for files)
+#   - TODO -- fix @example tags, when wont run w/o specific file available
 
 
-#' compare the speed of two expressions 
+#' python-style import
 #' 
-#' NOTE: args must be passed as strings! (for now...)
+#' import a single function from a file (instead of getting them all with `source()`)
 #'
-#' @param expr1 a quoted piece of code 
-#' @param expr2 another quoted piece of code 
+#' @param what function to be imported (*not quoted*)
+#' @param from path to file that defines `what` (character)
+#' @param msg whether to print a message on success ("func X was imported"); defaults to `TRUE`
 #'
-#' @return length-two vector with names equal to `expr1` and `expr2`, and values equal to the elapsed time after execution of each 
+#' @return no return value 
 #' @export
 #'
-#' @examples 
-#' compare_speed(expr1="length(1:(10^8))", expr2="length(1:(10^7))")
-#' boosh <- rep(c("bah", "bahbah", "boosh!"), times=1e5)
-#' compare_speed(expr1="sum(grepl('ba', boosh))", 
-#'               expr2="sum(grepl('oo', boosh))") 
-compare_speed <- function(expr1, expr2){ 
-  if (!all(is.character(expr1), is.character(expr2))){
-    message("you gotta pass args as character")
-    return(NULL)
-  } 
-  # message("assuming inputs are quoted code\n   ~~> will improve later")
-  out_names <- c(as.character(expr1), as.character(expr2))
-  out <- c(system.time(eval(parse(text=expr1)))["elapsed"], 
-           system.time(eval(parse(text=expr2)))["elapsed"])
-  return(setNames(object=out, nm=out_names))
-} 
+#' @examples
+#' # usage example (assumes `boosh()` is defined in "util.r")
+#' import(what=boosh, from="util.r") # `boosh()` gets created in calling env
+#' rm(boosh) # clear `boosh()` from ws
+#' blaowwie <- function(){
+#'   import(boosh, from="util.r"); boosh("blah1","blah2")}
+#' blaowwie() # `boosh()` will *not* be created in calling env of `blaowwie()` 
+import <- function(what, from, msg=TRUE){
+  # TODO: 
+  #   - generalize for importing multiple objs
+  #   - enable `from X import *` (basically just `source()`)
+  #   - allow for `import X as <whatev>` 
+  #   - allow for collect everything into a list + assign in parent env
+  #   - better filename handling?
+  #   - allow passing func names as character in addition to raw
+  #     (the strat is: gsub("^\"|\"$", "", deparse(substitute("<WHAT-HERE>"))))
+  #   - allow specifying environment to import to (currently just parent)
+  #   - allow for importing non-funcs 
+  #   - be smarter -- first look for the func, then use regex to grab it
+  #   - in smarter approach, need to worry about deps/other funcs called
+  
+  what <- deparse(substitute(expr=what))
+  env <- new.env(parent=parent.frame())
+  
+  source(file=from, local=env)
+  
+  if (what %in% names(env)){
+    func <- eval(parse(text=what), envir=env)
+    assign(what, value=func, envir=parent.env(env))
+    if (msg){
+      param_names <- names(formals(func))
+      func_sig <- paste0(what, "(", paste(param_names, collapse=", "), ")")
+      message(">> imported `", func_sig, "` from `", from, "`")
+    }
+    
+  }
+  else message(">> no func `", what, "` to import from `", from, "`")
+}
+
+
+
 
 
 
@@ -67,7 +87,7 @@ se_prop <- function(p, n){
 #' @return val 
 #' @export
 #'
-#' @examples boosh 
+#' @examples colorz()['lite_tan'] 
 colorz <- function(){
   c(lite_tan="#dbd4d0", claudy_braun="#afa69e", afghan_tan="#c8ab94",
     baygish="#68442a", bilbao="#248100", japlore="#2F742C")

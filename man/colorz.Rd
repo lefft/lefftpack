@@ -13,5 +13,5 @@ val
 colorz
 }
 \examples{
-boosh 
+colorz()['lite_tan'] 
 }
