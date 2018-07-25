@@ -32,6 +32,7 @@
 #' blaowwie() # `boosh()` will *not* be created in calling env of `blaowwie()` 
 import <- function(what, from, msg=TRUE){
   # TODO: 
+  #   - ENSURE NOTHING WEIRD HAPPENS IF STUFF OTHER THAN DEFINING FUNCS HAPPENS!
   #   - generalize for importing multiple objs
   #   - enable `from X import *` (basically just `source()`)
   #   - allow for `import X as <whatev>` 
@@ -104,30 +105,13 @@ colorz <- function(){
 #' @export
 #'
 #' @examples boosh 
-zscore <- function(x){
-  (x - mean(x, na.rm=TRUE)) / sd(x, na.rm=TRUE)
+zscore <- function(x, na.rm=TRUE){
+  (x - mean(x, na.rm=na.rm)) / sd(x, na.rm=na.rm)
 }
 
 
 
 
-#' pval_classify 
-#' 
-#' annotate vector of p-values w stars, indicating common signif levels
-#' 
-#' @param x 
-#' @param alpha 
-#'
-#' @return val 
-#' @export
-#'
-#' @examples boosh 
-pval_classify <- function(x, alpha=.05){
-  ifelse(x < (alpha/50), " ***", 
-         ifelse(x < (alpha/5), " **", 
-                ifelse(x < alpha, " *", 
-                       ifelse(x < (alpha*2), " +", " n.s."))))
-}
 
 
 #' string position getter (like `base::substr()` but nicer interface + `collapse` option)
@@ -274,65 +258,6 @@ lu <- function(x){
 }
 
 
-#' round to two digits
-#'
-#' (just a wrapper for quick interactive + ad hoc use) 
-#' 
-#' @param x a numeric vector
-#'
-#' @return `x`, rounded to two digits
-#' @export
-#'
-#' @examples r2(c(1.234, 2.34558))
-r2 <- function(x){
-  round(x, digits=2)
-}
-
-
-#' abbreviated summary of nested model comparison via LRT
-#'
-#' print just the test stat and p-value for a likelihood ratio test 
-#' assessing relative fit between two nested models (computed w `anova()`)
-#' 
-#' @param mob_full a model object with k predictors
-#' @param mob_red a model object with j predictors where j < k 
-#' @param anova_object a comparison of nested models via `anova()`
-#'
-#' @return mostly for message side-effect, but returns 
-#' the test stat and p-val in a named vector
-#' @export 
-#'
-#' @examples 
-#' fit <- lm(mpg ~ wt + cyl, data=mtcars)
-#' fit_red <- lm(mpg ~ cyl, data=mtcars)
-#' 
-#' print_lrt_message(mob_full=fit, mob_red=fit_red)
-#' 
-#' comparison <- anova(fit, fit_red)
-#' print_lrt_message(anova_object=comparison)
-print_lrt_message <- function(mob_full=NULL, mob_red=NULL, anova_object=NULL){
-  # throw error if it's not the case that exactly one of the following is true:
-  #   - is.null(anova_object)
-  #   - sum(is.null(mob_full), is.null(mob_red)) == 2
-  stopifnot(xor(is.null(anova_object)), 
-            sum(is.null(mob_full), is.null(mob_red)) == 2)
-  
-  if (is.null(anova_object)){
-    message("computing LRT via `anova()` for `mob_full` against `mob_red`\n")
-    anova_object <- anova(mob_full, mob_red)
-  } 
-  
-  message(
-    "\n------------------------------------------------------\n",
-    "using likelihood-ratio test assuming null hypothesis:\n   ",
-    "h_0: 'full model is no better than reduced model'\n\n",
-    anova_object$Chisq[2], "    <~~ chi-square test stat from LRT",
-    "\n", anova_object$`Pr(>Chisq)`[2], " <~~ p-value under the null",
-    "\n------------------------------------------------------\n"
-  )
-  return(c(test_stat = anova_object$Chisq[2], 
-           p_val = anova_object$`Pr(>Chisq)`[2]))
-}
 
 
 #' boot_sem

@@ -6,6 +6,7 @@
 #   - tf_idf()
 #   - remove_stops()
 #   - word_count_est()
+#   - tokenize_text()
 # 
 # working on integrating: 
 #   - bigram_plot()
@@ -19,8 +20,58 @@
 #   - better arg passing -- use `...` more
 # 
 # notes: 
+#   - refactor + use `tokenize_text()` as primary workhorse (july25/2018)
 #   - only `gram_size`=1 currewntly supported for tf-idf (aug13/2017)
 #   - for doc intersection, need to convert to base-only internals
+
+
+
+
+### tokenize_text(strings, ngram, split_re=" ", ...) -------------------------
+
+#' Tokenize text 
+#' 
+#' Split each element of a character vector by `split_re` into its constituent 
+#' `ngram` tokens. 
+#'
+#' @param strings character vector of text documents to be tokenized. 
+#' @param ngram positive integer specifying size of ngram chunks. 
+#' @param split_re regular expression denoting the token boundary to split strings by. 
+#' @param ... named arguments passed to `strs;lit()` 
+#'
+#' @return if `length(strings)==1`, returns a character vector of `ngram` tokens. If `length(strings) > 1`, returns a list each of whose elements is a character vector of `ngram` tokens. 
+#' @export
+#'
+#' @examples {
+#'   string <- "hai mi name timi + me girl nam dootza--tza"
+#'   tokenize_text(string, 1)
+#'   tokenize_text(string, 2)
+#'   lapply(1:3, function(x) tokenize_text(string, x))
+#'   tokenize_text(string, 2, "[ -]")
+#'   tokenize_text("me.lava.me.dootzi", 3, "\\.")
+#'   tokenize_text("me.lava.me.dootzi", 3, ".", fixed=TRUE)
+#'   tokenize_text(rep("me.lava.me.dootzi", 2), 3, ".", fixed=TRUE)
+#'   tokenize_text(c(string, "waow me fillin heppi meby beby"), 3)
+#'   tokenize_text(c(string, "waow me fillin heppi meby beby", NA), 3)
+#'   tokenize_text(c(string, "waow me fillin heppi meby beby", ""), 3)
+#'   tokenize_text(NA, 3)
+#' }
+tokenize_text <- function(strings, ngram, split_re=" ", ...){
+  # TODO: smthg like: `gsub(paste0("(", split_re, ")+"), split_re, strings)`
+  if (length(strings) > 1)
+    return(lapply(strings, function(s) tokenize_text(s, ngram, split_re, ...)))
+  if (is.na(strings)) return(NA_character_)
+  unigrams <- strsplit(as.character(strings), split=split_re, ...)[[1]]
+  ngram <- as.integer(ngram)
+  if (ngram > length(unigrams)) return(character(0))
+  stopifnot(ngram >= 1L, ngram <= length(unigrams))
+  start_idxs <- 1:(length(unigrams)-(ngram-1))
+  ngrams <- sapply(start_idxs, function(idx){
+    paste(unigrams[idx:(min(idx+(ngram-1), length(unigrams)))], collapse=" ")})
+  return(as.character(ngrams))
+}
+
+
 
 ### word_count_est(doc, unique=FALSE) -----------------------------------------
 

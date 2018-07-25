@@ -4,7 +4,7 @@
 \alias{zscore}
 \title{quick zscore func}
 \usage{
-zscore(x)
+zscore(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{}
